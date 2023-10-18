@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>选择文件并上传</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<input type="file" id="fileInput">
+<button id="uploadButton">选择文件并上传</button>
+
+<div id="result"></div>
+
+<script>
+  $(document).ready(function() {
+    $("#uploadButton").click(function() {
+      var fileInput = document.getElementById('fileInput');
+      var file = fileInput.files[0];
+
+      if (file) {
+        var formData = new FormData();
+        formData.append('uploadedFile', file);
+
+        $.ajax({
+          url: 'http://localhost:8081/func/chooseFile', // 后端处理文件上传的URL
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+            $('#result').text('上传成功: ' + response);
+          },
+          error: function(xhr, status, error) {
+            $('#result').text('上传失败: ' + error);
+          }
+        });
+      } else {
+        $('#result').text('请选择一个文件');
+      }
+    });
+  });
+</script>
+</body>
+</html>
