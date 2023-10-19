@@ -332,6 +332,83 @@ var µ = function() {
         return d.promise;
     }
 
+   /* function loadJson (resource) {
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '192.168.1.159') {
+            if (window.location.hostname === '281257120.github.io') {
+                resource = '/earthVue/dist' + resource
+            } else {
+                resource = '/data/current/' + resource
+            }
+        }
+
+
+        return new Promise((resolve, reject) => {
+            let param = { "model": "CFS", "datatime": "20200819", "element": "T2", "region": "JJJ", "ftime": "t_20200820_20200829", "datatype": "ENSEMBLE_ANO", "showtype": "obs", "rowssort": "0", "csarange": "0" }
+            let error
+            var formData = new FormData();
+            formData.append("para", JSON.stringify(param));
+            ajax_method(resource,
+                '',
+                'get',
+                function (result) {
+                    console.log('更改ajax：', error, 1, resource, 1, result)
+                    return error ?
+                        !error.status ?
+                            reject({ status: -1, message: "Cannot load resource: " + resource, resource: resource }) :
+                            reject({ status: error.status, message: error.statusText, resource: resource }) :
+                        resolve(result);
+                });
+        })
+    }
+    //这里不使用D3js请求方式，自己封装ajax
+    function ajax_method (url, data, method, success) {
+        // 异步对象
+        var ajax = new XMLHttpRequest();
+        // get 跟post  需要分别写不同的代码
+        if (method == 'get') {
+            // get请求
+            if (data) {
+                // 如果有值
+                url += '?';
+                url += data;
+            } else {
+
+            }
+            // 设置 方法 以及 url
+            ajax.open(method, url);
+
+            // send即可
+            ajax.send();
+        } else {
+            // post请求
+            // post请求 url 是不需要改变
+            ajax.open(method, url);
+            // 需要设置请求报文
+            // ajax.setRequestHeader('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
+            // 判断data send发送数据
+            if (data) {
+                // 如果有值 从send发送
+                ajax.send(data);
+            } else {
+                // 木有值 直接发送即可
+                ajax.send();
+            }
+        }
+        // 注册事件
+        ajax.onreadystatechange = function () {
+            // 在事件中 获取数据 并修改界面显示
+            if (ajax.readyState == 4 && ajax.status == 200) {
+                // console.log(ajax.responseText);
+                // 将 数据 让 外面可以使用
+                // return ajax.responseText;
+                // 当 onreadystatechange 调用时 说明 数据回来了
+                // ajax.responseText;
+                // 如果说 外面可以传入一个 function 作为参数 success
+                success(JSON.parse(ajax.responseText));
+            }
+        }
+    }*/
+
     /**
      * Returns the distortion introduced by the specified projection at the given point.
      *

@@ -60,18 +60,21 @@
         </p>
 
         <div id="menu" class="invisible">
-            <p>Date | <span
-                id="data-date" class="local"></span> <span
-                id="toggle-zone" class="text-button"></span>
-            </p>
-            <p>Data | <span id="data-layer"></span></p>
+            <!--选择文件功能按钮-->
             <p>
                 <input type="file" id="fileInput" accept=".json">
                 <button id="uploadButton">展示文件内容</button>
             </p>
 
+            <p>Date | <span
+                id="data-date" class="local"></span> <span
+                id="toggle-zone" class="text-button"></span>
+            </p>
+            <p>Data | <span id="data-layer"></span></p>
+
+
             <!--隐藏一些功能-->
-            <p><span id="scale-label" style="visibility: hidden">Scale | </span><canvas id="scale" style="visibility: hidden"></canvas></p>
+            <p style="visibility: hidden"><span id="scale-label">Scale | </span><canvas id="scale" style="visibility: hidden"></canvas></p>
             <!--<p>Source | <span id="data-center"></span></p>
             <p>Control | <span
                 class="text-button" id="nav-now" title="Current Conditions">Now</span><span
@@ -85,7 +88,7 @@
             <p>Mode | <span
                 class="text-button" id="wind-mode-enable">Air</span> – <span
                 class="text-button" id="ocean-mode-enable">Ocean</span>
-            </p>
+            </p>-->
             <p class="wind-mode">Height | <span
                 class="surface text-button" id="surface-level" title="Surface">Sfc</span> – <span
                 class="surface text-button" id="isobaric-1000hPa">1000</span> – <span
@@ -96,7 +99,7 @@
                 class="surface text-button" id="isobaric-70hPa">70</span> – <span
                 class="surface text-button" id="isobaric-10hPa">10</span> hPa
             </p>
-            <p class="wind-mode">Overlay | <span
+            <!--<p class="wind-mode">Overlay | <span
                 class="text-button" id="overlay-off">None</span> – <span
                 class="text-button" id="overlay-wind" title="Wind Speed">Wind</span> – <span
                 class="text-button" id="overlay-temp" title="Temperature">Temp</span> – <span
@@ -159,7 +162,7 @@
     <script src="/libs/earth/1.0.0/earth.js" charset="utf-8"></script>
 
 
-    <script>
+   <!-- <script>
         d3.select("#uploadButton").on("click", function() {
             var fileInput = document.getElementById('fileInput');
             var file = fileInput.files[0];
@@ -188,7 +191,7 @@
                 //d3.select('#result').text('请选择一个JSON文件');
             }
         });
-    </script>
+    </script>-->
 
 </body>
 </html>

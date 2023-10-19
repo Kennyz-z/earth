@@ -34,6 +34,11 @@
     var view = µ.view();
     var log = µ.log();
 
+    var DATADATE = "";
+    var DATASOURCE = "";
+    var FILENAME = "";
+
+
     /**
      * An object to display various types of messages to the user.
      */
@@ -715,7 +720,7 @@
     function showDate(grids) {
         var date = new Date(validityDate(grids)), isLocal = d3.select("#data-date").classed("local");
         var formatted = isLocal ? µ.toLocalISO(date) : µ.toUTCISO(date);
-        d3.select("#data-date").text(formatted + " " + (isLocal ? "Local" : "UTC"));
+        //d3.select("#data-date").text(formatted + " " + (isLocal ? "Local" : "UTC"));
         d3.select("#toggle-zone").text("⇄ " + (isLocal ? "UTC" : "Local"));
     }
 
@@ -876,6 +881,51 @@
      */
     function init() {
         report.status("Initializing...");
+
+        d3.select("#uploadButton").on("click",function () {
+            var inputElement = d3.select("#fileInput");
+            FILENAME = inputElement.property("value");
+            var res= FILENAME.split("\\");
+            FILENAME = res[2];
+            console.log("++++++++++++++++++++++++++");
+            console.log(FILENAME);
+            var fileInput = document.getElementById('fileInput');
+            var file = fileInput.files[0];
+            var resource = "/data/weather/current/"+FILENAME;
+
+
+            if (file) {
+                var formData = new FormData();
+                formData.append('uploadedFile', file);
+                fetch('http://localhost:8081/func/chooseFile', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        if (data) {
+                            var jsonData = JSON.parse(data);
+                            DATADATE = jsonData['date'];
+                            DATASOURCE = jsonData['parameterCategoryName'];
+                            var status = jsonData['status'];
+                                console.log(DATADATE);
+                                console.log(DATASOURCE);
+                                console.log(status);
+                            d3.select("#data-date").text(DATADATE);
+                        } else {
+
+                        }
+                    })
+                    .catch(error => {
+                        //
+                    });
+            } else {
+                //d3.select('#result').text('请选择一个JSON文件');
+            }
+        });
+
+
+
 
         d3.select("#sponsor-link")
             .attr("target", µ.isEmbeddedInIFrame() ? "_new" : null)
