@@ -99,7 +99,7 @@
                 class="surface text-button" id="isobaric-70hPa">70</span> – <span
                 class="surface text-button" id="isobaric-10hPa">10</span> hPa
             </p>
-            <!--<p class="wind-mode">Overlay | <span
+            <p class="wind-mode">Overlay | <span
                 class="text-button" id="overlay-off">None</span> – <span
                 class="text-button" id="overlay-wind" title="Wind Speed">Wind</span> – <span
                 class="text-button" id="overlay-temp" title="Temperature">Temp</span> – <span
@@ -107,7 +107,7 @@
                 class="text-button" id="overlay-air_density" title="Air Density">AD</span> – <span
                 class="text-button" id="overlay-wind_power_density" title="Wind Power Density">WPD</span>
             </p>
-            <p class="wind-mode"><span style="visibility:hidden">Overlay</span> | <span
+            <!--<p class="wind-mode"><span style="visibility:hidden">Overlay</span> | <span
                 class="text-button" id="overlay-total_precipitable_water" title="Total Precipitable Water">TPW</span> – <span
                 class="text-button" id="overlay-total_cloud_water" title="Total Cloud Water">TCW</span> – <span
                 class="text-button" id="overlay-mean_sea_level_pressure" title="Mean Sea Level Pressure">MSLP</span>
@@ -160,38 +160,6 @@
     <script src="/libs/earth/1.0.0/globes.js" charset="utf-8"></script>
     <script src="/libs/earth/1.0.0/products.js" charset="utf-8"></script>
     <script src="/libs/earth/1.0.0/earth.js" charset="utf-8"></script>
-
-
-   <!-- <script>
-        d3.select("#uploadButton").on("click", function() {
-            var fileInput = document.getElementById('fileInput');
-            var file = fileInput.files[0];
-
-            if (file) {
-                var formData = new FormData();
-                formData.append('uploadedFile', file);
-                fetch('http://localhost:8081/func/chooseFile', {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(response => response.text())
-                    .then(data => {
-                        if (data) {
-                            var jsonData = JSON.parse(data);
-                            console.log(jsonData['date']);
-
-                        } else {
-
-                        }
-                    })
-                    .catch(error => {
-                        //
-                    });
-            } else {
-                //d3.select('#result').text('请选择一个JSON文件');
-            }
-        });
-    </script>-->
 
 </body>
 </html>

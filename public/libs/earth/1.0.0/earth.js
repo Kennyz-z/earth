@@ -34,8 +34,13 @@
     var view = µ.view();
     var log = µ.log();
 
-    var DATADATE = "";
-    var DATASOURCE = "";
+    window.DATADATE = "";
+    window.DATASOURCE = "";
+    window.isCus = false;
+    window.OverlayType = "";
+
+    var cusDate = "";
+    var cusSource = "";
     var FILENAME = "";
 
 
@@ -891,7 +896,14 @@
             console.log(FILENAME);
             var fileInput = document.getElementById('fileInput');
             var file = fileInput.files[0];
-            var resource = "/data/weather/current/"+FILENAME;
+            DATASOURCE = "/data/weather/current/"+FILENAME;
+            isCus = true;
+
+            //configuration.save({param: "wind", surface: "surface", level: "level", overlayType: "default", topology: resource});
+            gridAgent.submit(buildGrids);
+            //µ.loadJson(resource);
+
+
 
 
             if (file) {
@@ -905,13 +917,13 @@
                     .then(data => {
                         if (data) {
                             var jsonData = JSON.parse(data);
-                            DATADATE = jsonData['date'];
-                            DATASOURCE = jsonData['parameterCategoryName'];
+                            cusDate = jsonData['date'];
+                            cusSource = jsonData['parameterCategoryName'];
                             var status = jsonData['status'];
-                                console.log(DATADATE);
-                                console.log(DATASOURCE);
+                                console.log(cusDate);
+                                console.log(cusDate);
                                 console.log(status);
-                            d3.select("#data-date").text(DATADATE);
+                            d3.select("#data-date").text(cusDate);
                         } else {
 
                         }
@@ -1153,11 +1165,13 @@
         bindButtonToConfiguration("#overlay-currents", {overlayType: "default"});
 
         // Add handlers for all projection buttons.
+        //为投影按钮添加处理程序
         globes.keys().forEach(function(p) {
             bindButtonToConfiguration("#" + p, {projection: p, orientation: ""}, ["projection"]);
         });
 
         // When touch device changes between portrait and landscape, rebuild globe using the new view size.
+        // 当触摸设备在纵向和横向之间变化时，使用新的视图尺寸重建地球仪。
         d3.select(window).on("orientationchange", function() {
             view = µ.view();
             globeAgent.submit(buildGlobe, configuration.get("projection"));

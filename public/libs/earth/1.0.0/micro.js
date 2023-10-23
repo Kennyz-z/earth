@@ -319,7 +319,7 @@ var µ = function() {
      * Returns a promise for a JSON resource (URL) fetched via XHR. If the load fails, the promise rejects with an
      * object describing the reason: {status: http-status-code, message: http-status-text, resource:}.
      */
-    function loadJson(resource) {
+    /*function loadJson(resource) {
         var d = when.defer();
         console.log(resource+"=======================")
         d3.json(resource, function(error, result) {
@@ -330,16 +330,16 @@ var µ = function() {
                 d.resolve(result);
         });
         return d.promise;
-    }
+    }*/
 
-   /* function loadJson (resource) {
-        if (window.location.hostname !== 'localhost' && window.location.hostname !== '192.168.1.159') {
+    function loadJson (resource) {
+        /*if (window.location.hostname !== 'localhost' && window.location.hostname !== '192.168.1.159') {
             if (window.location.hostname === '281257120.github.io') {
                 resource = '/earthVue/dist' + resource
             } else {
                 resource = '/data/current/' + resource
             }
-        }
+        }*/
 
 
         return new Promise((resolve, reject) => {
@@ -367,13 +367,13 @@ var µ = function() {
         // get 跟post  需要分别写不同的代码
         if (method == 'get') {
             // get请求
-            if (data) {
+            /*if (data) {
                 // 如果有值
                 url += '?';
                 url += data;
             } else {
 
-            }
+            }*/
             // 设置 方法 以及 url
             ajax.open(method, url);
 
@@ -398,7 +398,7 @@ var µ = function() {
         ajax.onreadystatechange = function () {
             // 在事件中 获取数据 并修改界面显示
             if (ajax.readyState == 4 && ajax.status == 200) {
-                // console.log(ajax.responseText);
+                 console.log(ajax.responseText);
                 // 将 数据 让 外面可以使用
                 // return ajax.responseText;
                 // 当 onreadystatechange 调用时 说明 数据回来了
@@ -407,7 +407,7 @@ var µ = function() {
                 success(JSON.parse(ajax.responseText));
             }
         }
-    }*/
+    }
 
     /**
      * Returns the distortion introduced by the specified projection at the given point.
