@@ -41,15 +41,22 @@ var products = function() {
      * @param {String?} level
      * @returns {String}
      */
+
+
+
     function gfs1p0degPath(attr, type, surface, level) {
         var dir = attr.date, stamp = dir === "current" ? "current" : attr.hour;
         var file = [stamp, type, surface, level, "gfs", "1.0"].filter(µ.isValue).join("-") + ".json";
-        if(isCus){
-            isCus = false;
-            return DATASOURCE;
+        /*if(DATASOURCE && attr.overlayType != "temp"){
+            //isCus = false;
+            var dataurl = DATASOURCE;
+            DATASOURCE = "";
+            return dataurl;
         }else{
             return [WEATHER_PATH, dir, file].join("/");
-        }
+        }*/
+        return [WEATHER_PATH, dir, file].join("/");
+
 
     }
 
@@ -118,6 +125,13 @@ var products = function() {
         "wind": {
             matches: _.matches({param: "wind"}),
             create: function(attr) {
+                var curPath = "";
+                if(DATASOURCE){
+                    curPath = [DATASOURCE];
+                    //OverlaySource = "";
+                }else{
+                    curPath = [gfs1p0degPath(attr, "wind", attr.surface, attr.level)];
+                }
                 return buildProduct({
                     field: "vector",
                     type: "wind",
@@ -125,7 +139,8 @@ var products = function() {
                         name: {en: "Wind", ja: "風速"},
                         qualifier: {en: " @ " + describeSurface(attr), ja: " @ " + describeSurfaceJa(attr)}
                     }),
-                    paths: [gfs1p0degPath(attr, "wind", attr.surface, attr.level)],
+                    //paths: [gfs1p0degPath(attr, "wind", attr.surface, attr.level)],
+                    paths: curPath,
                     date: gfsDate(attr),
                     builder: function(file) {
                         var uData = file[0].data, vData = file[1].data;
@@ -157,6 +172,13 @@ var products = function() {
         "temp": {
             matches: _.matches({param: "wind", overlayType: "temp"}),
             create: function(attr) {
+                var curPath = "";
+                if(OverlaySource){
+                    curPath = [OverlaySource];
+                    //OverlaySource = "";
+                }else{
+                    curPath = [gfs1p0degPath(attr, "temp", attr.surface, attr.level)];
+                }
                 return buildProduct({
                     field: "scalar",
                     type: "temp",
@@ -164,7 +186,8 @@ var products = function() {
                         name: {en: "Temp", ja: "気温"},
                         qualifier: {en: " @ " + describeSurface(attr), ja: " @ " + describeSurfaceJa(attr)}
                     }),
-                    paths: [gfs1p0degPath(attr, "temp", attr.surface, attr.level)],
+                    // paths: [gfs1p0degPath(attr, "temp", attr.surface, attr.level)],
+                    paths: curPath,
                     date: gfsDate(attr),
                     builder: function(file) {
                         var record = file[0], data = record.data;
@@ -684,6 +707,7 @@ var products = function() {
         };
     }
 
+    //根据配置属性返回一个包含产品对象的数组。
     function productsFor(attributes) {
         var attr = _.clone(attributes), results = [];
         _.values(FACTORIES).forEach(function(factory) {

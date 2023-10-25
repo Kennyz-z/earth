@@ -36,8 +36,10 @@
 
     window.DATADATE = "";
     window.DATASOURCE = "";
+    window.OverlaySource = "";
     window.isCus = false;
     window.OverlayType = "";
+    window.isOverlayChange = false;
 
     var cusDate = "";
     var cusSource = "";
@@ -262,11 +264,15 @@
         //         this allows us to use the product for navigation and other state.
         var cancel = this.cancel;
         downloadsInProgress++;
+        //调用productsFor函数，返回包含产品对象的数组
+        //.map()用于遍历产品数组
         var loaded = when.map(products.productsFor(configuration.attributes), function(product) {
             return product.load(cancel);
         });
+        //.then()回调函数
         return when.all(loaded).then(function(products) {
             log.time("build grids");
+            //products中分别存储第一个和第二个下载的产品对象
             return {primaryGrid: products[0], overlayGrid: products[1] || products[0]};
         }).ensure(function() {
             downloadsInProgress--;
@@ -666,6 +672,7 @@
         });
     }
 
+    //用于绘制overlay
     function drawOverlay(field, overlayType) {
         if (!field) return;
 
@@ -888,6 +895,7 @@
         report.status("Initializing...");
 
         d3.select("#uploadButton").on("click",function () {
+            //configuration.save({overlayType: "temp"});
             var inputElement = d3.select("#fileInput");
             FILENAME = inputElement.property("value");
             var res= FILENAME.split("\\");
@@ -896,12 +904,21 @@
             console.log(FILENAME);
             var fileInput = document.getElementById('fileInput');
             var file = fileInput.files[0];
-            DATASOURCE = "/data/weather/current/"+FILENAME;
-            isCus = true;
+            var url = "/data/weather/current/"+FILENAME;
+            //isCus = true;
+            if(FILENAME.includes("temp")){
+                OverlaySource = url;
+                isOverlayChange = true;
+                configuration.save({overlayType: "temp"});
+                //configuration.trigger('change');
+            }else{
+                DATASOURCE = url;
 
+            }
             //configuration.save({param: "wind", surface: "surface", level: "level", overlayType: "default", topology: resource});
             gridAgent.submit(buildGrids);
-            //µ.loadJson(resource);
+
+            //configuration.trigger('change');
 
 
 
@@ -919,10 +936,8 @@
                             var jsonData = JSON.parse(data);
                             cusDate = jsonData['date'];
                             cusSource = jsonData['parameterCategoryName'];
+                            OverlayType = jsonData['parameterCategoryName'];
                             var status = jsonData['status'];
-                                console.log(cusDate);
-                                console.log(cusDate);
-                                console.log(status);
                             d3.select("#data-date").text(cusDate);
                         } else {
 
@@ -1157,6 +1172,7 @@
         bindButtonToConfiguration("#animate-currents", {param: "ocean", surface: "surface", level: "currents"});
 
         // Add handlers for all overlay buttons.
+        //为所有overlay按钮添加事件
         products.overlayTypes.forEach(function(type) {
             bindButtonToConfiguration("#overlay-" + type, {overlayType: type});
         });

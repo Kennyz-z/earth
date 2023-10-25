@@ -398,7 +398,7 @@ var µ = function() {
         ajax.onreadystatechange = function () {
             // 在事件中 获取数据 并修改界面显示
             if (ajax.readyState == 4 && ajax.status == 200) {
-                 console.log(ajax.responseText);
+                 //console.log(ajax.responseText);
                 // 将 数据 让 外面可以使用
                 // return ajax.responseText;
                 // 当 onreadystatechange 调用时 说明 数据回来了
