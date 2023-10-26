@@ -893,6 +893,7 @@
      */
     function init() {
         report.status("Initializing...");
+        //configuration.save({orientation: "-265.59,43.61,626"});
 
         d3.select("#uploadButton").on("click",function () {
             //configuration.save({overlayType: "temp"});
@@ -905,6 +906,7 @@
             var fileInput = document.getElementById('fileInput');
             var file = fileInput.files[0];
             var url = "/data/weather/current/"+FILENAME;
+            configuration.save({orientation: "-265.59,43.61,626"});
             //isCus = true;
             if(FILENAME.includes("temp")){
                 OverlaySource = url;
@@ -1029,6 +1031,8 @@
             }
 
             if (rebuildRequired) {
+                //改变初始定位
+                configuration.save({orientation: "-265.59,43.61,626"});
                 gridAgent.submit(buildGrids);
             }
         });
