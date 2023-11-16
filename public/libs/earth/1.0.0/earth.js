@@ -37,13 +37,10 @@
     window.DATADATE = "";
     window.DATASOURCE = "";
     window.OverlaySource = "";
-    window.isCus = false;
     window.OverlayType = "";
     window.isOverlayChange = false;
+    window.content = "";
 
-    var cusDate = "";
-    var cusSource = "";
-    var FILENAME = "";
 
 
     /**
@@ -887,73 +884,64 @@
         }
     }
 
+    //上传文件的函数
+    function uploadProcess(file, elementId) {
+        if(file){
+            var formData = new FormData();
+            formData.append("jsonFile", file);
+            fetch('http://localhost:8081/func/uploadFile', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.text()) // 或者根据返回类型调整
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+            var inputElement = d3.select(elementId);
+            var fileName = inputElement.property("value");
+            var res = fileName.split("\\");
+
+            fileName = res[2];
+            var url = "/data/weather/current/" + fileName;
+            if (fileName.includes("temp")) {
+                OverlaySource = url;
+                window.modeData = window.preData;
+                configuration.save({overlayType: "temp"});
+            } else {
+                DATASOURCE = url;
+            }
+            gridAgent.submit(buildGrids);
+        }
+    }
+
     /**
      * Registers all event handlers to bind components and page elements together. There must be a cleaner
      * way to accomplish this...
      */
     function init() {
         report.status("Initializing...");
-        //configuration.save({orientation: "-265.59,43.61,626"});
 
-        d3.select("#uploadButton").on("click",function () {
-            //configuration.save({overlayType: "temp"});
-            var inputElement = d3.select("#fileInput");
-            FILENAME = inputElement.property("value");
-            var res= FILENAME.split("\\");
-            FILENAME = res[2];
-            console.log("++++++++++++++++++++++++++");
-            console.log(FILENAME);
-            var fileInput = document.getElementById('fileInput');
+        var fileInput = document.getElementById("fileInput");
+        fileInput.addEventListener("change", function() {
             var file = fileInput.files[0];
-            var url = "/data/weather/current/"+FILENAME;
-            //configuration.save({orientation: "-265.59,43.61,626"});
-            //isCus = true;
-            if(FILENAME.includes("temp")){
-                OverlaySource = url;
-                isOverlayChange = true;
-                configuration.save({overlayType: "temp"});
-                //configuration.trigger('change');
-            }else{
-                DATASOURCE = url;
-
-            }
-            //configuration.save({param: "wind", surface: "surface", level: "level", overlayType: "default", topology: resource});
-            gridAgent.submit(buildGrids);
-
-            //configuration.trigger('change');
-
-
-
-
-            if (file) {
-                var formData = new FormData();
-                formData.append('uploadedFile', file);
-                fetch('http://localhost:8081/func/chooseFile', {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(response => response.text())
-                    .then(data => {
-                        if (data) {
-                            var jsonData = JSON.parse(data);
-                            cusDate = jsonData['date'];
-                            cusSource = jsonData['parameterCategoryName'];
-                            OverlayType = jsonData['parameterCategoryName'];
-                            var status = jsonData['status'];
-                            d3.select("#data-date").text(cusDate);
-                        } else {
-
-                        }
-                    })
-                    .catch(error => {
-                        //
-                    });
-            } else {
-                //d3.select('#result').text('请选择一个JSON文件');
-            }
+            uploadProcess(file, "#fileInput");
         });
 
 
+        var overlayInput = document.getElementById("overlayInput");
+        overlayInput.addEventListener("change",function (){
+            var file = overlayInput.files[0];
+            uploadProcess(file, "#overlayInput");
+        });
+
+
+        d3.select("#cleanOverlay").on("click",function (){
+            configuration.save({overlayType: "default"});
+            gridAgent.submit(buildGrids);
+        });
 
 
         d3.select("#sponsor-link")
@@ -1032,7 +1020,7 @@
 
             if (rebuildRequired) {
                 //改变初始定位
-                configuration.save({orientation: "-265.59,43.61,332"});
+                configuration.save({orientation: "-248.22,46.49,735"});
                 gridAgent.submit(buildGrids);
             }
         });

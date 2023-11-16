@@ -13,6 +13,7 @@ var µ = function() {
     var H = 0.0000360;  // 0.0000360°φ ~= 4m
     var DEFAULT_CONFIG = "current/wind/surface/level/orthographic";
     var TOPOLOGY = isMobile() ? "/data/earth-topo-mobile.json?v2" : "/data/earth-topo.json?v2";
+    var times = 1;
 
     /**
      * @returns {Boolean} true if the specified value is truthy.
@@ -333,14 +334,6 @@ var µ = function() {
     }*/
 
     function loadJson (resource) {
-        /*if (window.location.hostname !== 'localhost' && window.location.hostname !== '192.168.1.159') {
-            if (window.location.hostname === '281257120.github.io') {
-                resource = '/earthVue/dist' + resource
-            } else {
-                resource = '/data/current/' + resource
-            }
-        }*/
-
 
         return new Promise((resolve, reject) => {
             let param = { "model": "CFS", "datatime": "20200819", "element": "T2", "region": "JJJ", "ftime": "t_20200820_20200829", "datatype": "ENSEMBLE_ANO", "showtype": "obs", "rowssort": "0", "csarange": "0" }
@@ -396,6 +389,8 @@ var µ = function() {
         }
         // 注册事件
         ajax.onreadystatechange = function () {
+            //添加一个计数器times
+
             // 在事件中 获取数据 并修改界面显示
             if (ajax.readyState == 4 && ajax.status == 200) {
                  //console.log(ajax.responseText);
@@ -405,6 +400,22 @@ var µ = function() {
                 // ajax.responseText;
                 // 如果说 外面可以传入一个 function 作为参数 success
                 success(JSON.parse(ajax.responseText));
+            }else if(ajax.status == 404 && ajax.readyState == 4){
+                if(window.isOverlayChange){
+                    if(times == 1){
+                        success(JSON.parse(window.modeData));
+                        times++;
+                    }
+                    else if(times == 2){
+                        success(JSON.parse(window.overlayData));
+                        isOverlayChange = false;
+                        times = 1;
+                    }
+
+
+                }else{
+                    success(JSON.parse(window.modeData));
+                }
             }
         }
     }

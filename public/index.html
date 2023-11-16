@@ -62,19 +62,23 @@
         <div id="menu" class="invisible">
             <!--选择文件功能按钮-->
             <p>
-                <input type="file" id="fileInput" accept=".json">
-                <button id="uploadButton">展示文件内容</button>
+                <input type="file" id="fileInput" accept=".json" style="font-size: 0.75rem">
+            </p>
+            <p>
+                <!--添加覆盖层按钮-->
+                <input type="file" id="overlayInput" accept=".json" style="font-size: 0.75rem">
+                <button id="cleanOverlay" style="font-size: 0.75rem">清除覆盖</button>
             </p>
 
-            <p>Date | <span
+            <p style="display: none">Date | <span
                 id="data-date" class="local"></span> <span
                 id="toggle-zone" class="text-button"></span>
             </p>
-            <p>Data | <span id="data-layer"></span></p>
+            <p style="display: none">Data | <span id="data-layer"></span></p>
 
 
             <!--隐藏一些功能-->
-            <p style="visibility: hidden"><span id="scale-label">Scale | </span><canvas id="scale" style="visibility: hidden"></canvas></p>
+            <p><span id="scale-label">Scale | </span><canvas id="scale"></canvas></p>
             <!--<p>Source | <span id="data-center"></span></p>
             <p>Control | <span
                 class="text-button" id="nav-now" title="Current Conditions">Now</span><span
@@ -89,7 +93,7 @@
                 class="text-button" id="wind-mode-enable">Air</span> – <span
                 class="text-button" id="ocean-mode-enable">Ocean</span>
             </p>-->
-            <p class="wind-mode" style="visibility: hidden">Height | <span
+            <p class="wind-mode" style="display: none">Height | <span
                 class="surface text-button" id="surface-level" title="Surface">Sfc</span> – <span
                 class="surface text-button" id="isobaric-1000hPa">1000</span> – <span
                 class="surface text-button" id="isobaric-850hPa">850</span> – <span
@@ -99,7 +103,7 @@
                 class="surface text-button" id="isobaric-70hPa">70</span> – <span
                 class="surface text-button" id="isobaric-10hPa">10</span> hPa
             </p>
-            <p class="wind-mode" style="visibility: hidden">Overlay | <span
+            <p class="wind-mode" style="display: none">Overlay | <span
                 class="text-button" id="overlay-off">None</span> – <span
                 class="text-button" id="overlay-wind" title="Wind Speed">Wind</span> – <span
                 class="text-button" id="overlay-temp" title="Temperature">Temp</span> – <span
@@ -140,17 +144,15 @@
         </div>
     </div>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js" charset="utf-8"></script>
+    <!--<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js" charset="utf-8"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js" charset="utf-8"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.1.0/topojson.min.js" charset="utf-8"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.3.10/d3.min.js" charset="utf-8"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.3.10/d3.min.js" charset="utf-8"></script>-->
 
-<!--
     <script src="/libs/underscore.js/1.6.0/underscore.js" charset="utf-8"></script>
     <script src="/libs/backbone.js/1.1.0/backbone.js" charset="utf-8"></script>
     <script src="/libs/topojson/1.1.0/topojson.js" charset="utf-8"></script>
     <script src="/libs/d3/3.3.10/d3.js" charset="utf-8"></script>
--->
 
     <script src="/libs/d3.geo/0.0.0/d3.geo.projection.v0.min.js" charset="utf-8"></script>
     <script src="/libs/d3.geo/0.0.0/d3.geo.polyhedron.v0.min.js" charset="utf-8"></script>

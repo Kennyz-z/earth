@@ -111,11 +111,11 @@ body {
 }
 
 #earth {
-    font-size: 2.4rem;
+    font-size: 1.5rem;
 }
 
 #status, #location, #menu {
-    font-size: 1.75rem;
+    font-size: 1.0rem;
 }
 
 #status, #location, #earth {

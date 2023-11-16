@@ -47,14 +47,6 @@ var products = function() {
     function gfs1p0degPath(attr, type, surface, level) {
         var dir = attr.date, stamp = dir === "current" ? "current" : attr.hour;
         var file = [stamp, type, surface, level, "gfs", "1.0"].filter(µ.isValue).join("-") + ".json";
-        /*if(DATASOURCE && attr.overlayType != "temp"){
-            //isCus = false;
-            var dataurl = DATASOURCE;
-            DATASOURCE = "";
-            return dataurl;
-        }else{
-            return [WEATHER_PATH, dir, file].join("/");
-        }*/
         return [WEATHER_PATH, dir, file].join("/");
 
 
@@ -712,6 +704,7 @@ var products = function() {
         var attr = _.clone(attributes), results = [];
         _.values(FACTORIES).forEach(function(factory) {
             if (factory.matches(attr)) {
+                //
                 results.push(factory.create(attr));
             }
         });
