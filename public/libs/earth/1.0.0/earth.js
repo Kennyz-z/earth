@@ -31,9 +31,13 @@
     var REMAINING = "▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫▫";   // glyphs for remaining progress bar
     var COMPLETED = "▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪▪";   // glyphs for completed progress bar
 
+    let that = this;
     var view = µ.view();
     var log = µ.log();
 
+    var ajaxValue = {};
+
+    window.showPlay = true;
     window.DATADATE = "";
     window.DATASOURCE = "";
     window.OverlaySource = "";
@@ -188,7 +192,24 @@
             }
         });
 
+        // 播放按钮
+        d3.select("#option-show-play").on("click", function () {
+            configuration.save({ showPlay: !configuration.get("showPlay") });
+        });
+        configuration.on("change:showPlay", function (x, showPlay) {
+            window.showPlay = !window.showPlay
+            if (window.showPlay) {
+                gridAgent.submit(function () { return ajaxValue });
+                d3.select("#option-show-play").classed("highlighted", false);
+            } else {
+                stopCurrentAnimation(true);
+                d3.select("#option-show-play").classed("highlighted", true);
+            }
+        });
+
         function reorient() {
+            window.showPlay = true;
+            d3.select("#option-show-play").classed("highlighted", false);
             var options = arguments[3] || {};
             if (!globe || options.source === "moveEnd") {
                 // reorientation occurred because the user just finished a move operation, so globe is already
@@ -269,6 +290,7 @@
         //.then()回调函数
         return when.all(loaded).then(function(products) {
             log.time("build grids");
+            ajaxValue = { primaryGrid: products[0], overlayGrid: products[1] || products[0] }
             //products中分别存储第一个和第二个下载的产品对象
             return {primaryGrid: products[0], overlayGrid: products[1] || products[0]};
         }).ensure(function() {
@@ -878,28 +900,35 @@
         });
     }
 
+
     function reportSponsorClick(type) {
         if (ga) {
             ga("send", "event", "sponsor", type);
         }
     }
 
-    //上传文件的函数
-    function uploadProcess(file, elementId) {
-        if(file){
+    //上传文件的函数 async定义函数，await关键字用于等待fetch完成，允许以线性方式编写等待异步操作结果的代码。
+    async function uploadProcess(file, elementId) {
+        if (file) {
             var formData = new FormData();
             formData.append("jsonFile", file);
-            fetch('http://localhost:8081/func/uploadFile', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => response.text()) // 或者根据返回类型调整
-                .then(data => {
-                    console.log(data);
+            try {
+                await fetch('http://localhost:8081/func/uploadFile', {
+                    method: 'POST',
+                    body: formData
                 })
-                .catch(error => {
-                    console.error(error);
-                });
+                    .then(response => response.text()) // 或者根据返回类型调整
+                    .then(data => {
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+
+            } catch (error) {
+                console.log(error);
+            }
+
             var inputElement = d3.select(elementId);
             var fileName = inputElement.property("value");
             var res = fileName.split("\\");
